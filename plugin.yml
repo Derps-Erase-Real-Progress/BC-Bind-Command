@@ -1,0 +1,14 @@
+name: BindCommand
+main: com.github.sashacrofter.bindcommand.BindCommand
+version: 0.1
+author: DuoNoxSol
+commands:
+    bc:
+        description: invokes a bound command
+        usage: /<command> bound-name
+        permission: <plugin name>.bind
+        permission-message: You don't have <permission>
+    
+permissions:
+    bind:
+        description: Allows players to bind and invoke commands they have access to
