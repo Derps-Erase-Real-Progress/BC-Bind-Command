@@ -1,5 +1,6 @@
 package com.github.sashacrofter.bindcommand;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -13,22 +14,30 @@ public class BindCommand extends JavaPlugin
 {
 	private Logger log;
 	private CommandModifier cm;
+	private File dataFile;
 	
 	public static void main (String[] args)
 	{
-		
 	}
 	
 	public void onEnable()
 	{
 		log = this.getLogger();
-		cm = DataHandler.loadCM(getDataFolder()+"BindCommandCM.txt");
+		cm = null;
+		dataFile = new File(getDataFolder()+"/BindCommandCM.txt");
+		
+		if(dataFile.exists()) cm = DataHandler.loadCM(dataFile.getAbsolutePath());
+		else cm = new CommandModifier(); //Make new if nonexistent
 	}
 	
 	public void onDisable()
 	{
-		log.info(this.getName() + " has been disabled.");
-		DataHandler.saveCM(cm, getDataFolder()+"BindCommandCM.txt");
+		if(!dataFile.exists()) //Create new file
+		{
+			try { dataFile.createNewFile(); }
+			catch (Exception e) {}
+		}
+		DataHandler.saveCM(cm, dataFile.getAbsolutePath());
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd,
@@ -40,10 +49,34 @@ public class BindCommand extends JavaPlugin
 			this.warn(sender, "You don't have permission to use this plugin.");
 		} else
 		{
-			if(cmd.getName().equalsIgnoreCase("bc"))
+			if(cmd.getName().equalsIgnoreCase("bc")) //Execute stored command
 			{
-				
+				if(args.length > 0)
+				{
+					//Assemble multi-word key if necessary
+					String key = args[0];
+					for(int i=1;i<args.length;i++) key = key+" "+args[i];
+					//Get stored command from the key
+					String command = this.cm.getCommand(sender, key); //TODO handle NullPointerException
+					//TODO execute command as player
+					//temporary
+					this.log(command);
+				}
 			}
+			else if(cmd.getName().equalsIgnoreCase("bc-bind")) //Bind new command
+			{
+				if(args.length > 1)
+				{
+					//TODO allow multi-word key and begin to interpret command at /<command>
+					String key = args[0];
+					//Assemble multi-word command
+					String command = args[1];
+					for(int i=2;i<args.length;i++) command = command+" "+args[i];
+					//Create new bind
+					if (this.cm.setKey(sender, key, command));
+					else this.warn(sender, "Binding failed because that key is taken.");
+				}
+			} //TODO add removal of bound keys 
 		}
 		return false;
 	}

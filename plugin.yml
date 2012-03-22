@@ -8,7 +8,14 @@ commands:
         usage: /<command> bound-name
         permission: <plugin name>.bind
         permission-message: You don't have <permission>
+    bc-bind:
+        description: binds a String (key) to a command
+        usage: /<command> bind-name /command to bind
+        aliases: bind
+        permission: <plugin name>.bind
+        permission-message: You don't have <permission>
     
 permissions:
     bind:
         description: Allows players to bind and invoke commands they have access to
+        default: true

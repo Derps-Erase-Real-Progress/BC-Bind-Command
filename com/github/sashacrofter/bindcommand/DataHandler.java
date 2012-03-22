@@ -2,10 +2,8 @@ package com.github.sashacrofter.bindcommand;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
 
 public class DataHandler
 {
@@ -20,7 +18,7 @@ public class DataHandler
 			outputStream.writeObject(cm);
 			outputStream.flush();
 			outputStream.close();
-		} catch (IOException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}

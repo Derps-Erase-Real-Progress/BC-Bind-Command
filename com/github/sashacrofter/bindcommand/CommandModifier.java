@@ -2,6 +2,8 @@ package com.github.sashacrofter.bindcommand;
 
 import java.util.HashMap;
 
+import org.bukkit.command.CommandSender;
+
 public class CommandModifier
 {
 	private HashMap<String, HashMap<String, String>> map;
@@ -13,13 +15,13 @@ public class CommandModifier
 	
 	/**
 	 * Converts a key and playername into the String the player bound the key to
-	 * @param playername the player invoking the bound command
+	 * @param player the player invoking the bound command
 	 * @param key the key the player invoked
 	 * @return the string that the player bound to the key
 	 */
-	public String getCommand(String playername, String key)
+	public String getCommand(CommandSender player, String key)
 	{
-		return this.map.get(playername).get(key);
+		return this.map.get(player.getName()).get(key);
 	}
 	
 	/**
@@ -27,10 +29,10 @@ public class CommandModifier
 	 * @param player playername to add
 	 * @return true if added successfully, false if player already exists
 	 */
-	public boolean setPlayer(String player)
+	public boolean setPlayer(CommandSender player)
 	{
-		if(this.map.containsKey(player)) return false;
-		this.map.put(player, new HashMap<String, String>());
+		if(this.map.containsKey(player.getName())) return false;
+		this.map.put(player.getName(), new HashMap<String, String>());
 		return true;
 	}
 	
@@ -39,9 +41,9 @@ public class CommandModifier
 	 * @param player player to remove
 	 * @return true if player was removed successfully, false if it was not existent
 	 */
-	public boolean removePlayer(String player)
+	public boolean removePlayer(CommandSender player)
 	{
-		if(!this.map.containsKey(player)) return false;
+		if(!this.map.containsKey(player.getName())) return false;
 		this.map.remove(player);
 		return true;
 	}
@@ -53,7 +55,7 @@ public class CommandModifier
 	 * @param command
 	 * @return true if key was added successfully, false if key is already bound
 	 */
-	public boolean setKey(String player, String key, String command)
+	public boolean setKey(CommandSender player, String key, String command)
 	{
 		if(!this.map.containsKey(player)) this.setPlayer(player);
 		if(this.map.get(player).containsKey(key)) return false;
@@ -67,10 +69,10 @@ public class CommandModifier
 	 * @param key key to remove
 	 * @return true if key was removed successfully, false if it was not existent
 	 */
-	public boolean removeKey(String player, String key)
+	public boolean removeKey(CommandSender player, String key)
 	{
-		if(!this.map.get(player).containsKey(key)) return false;
-		this.map.get(player).remove(key);
+		if(!this.map.get(player.getName()).containsKey(key)) return false;
+		this.map.get(player.getName()).remove(key);
 		return true;
 	}
 }
